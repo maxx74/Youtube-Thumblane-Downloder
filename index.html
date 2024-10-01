@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thumbnail Downloader</title>
+    <style>
+	body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#thumbnails img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+   </style>
+	
+</head>
+<body>
+    <div class="container">
+        <h1>Thumbnail Downloader</h1>
+        <input type="text" id="imageUrl" placeholder="Enter YouTube Video URL">
+        <button onclick="showThumbnails()">Show Thumbnails</button>
+        <div id="thumbnails" style="margin-top: 20px;"></div>
+
+        <!-- Button to download thumbnails (hidden initially) -->
+        <button id="downloadButton" onclick="downloadThumbnails()" style="display: none; margin-top: 20px;">Download Thumbnails</button>
+    </div>
+    <script>
+	function showThumbnails() {
+    	var imageUrl = document.getElementById('imageUrl').value;
+
+    // Check if the URL is a valid YouTube video URL
+    var youtubeRegex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    var match = imageUrl.match(youtubeRegex);
+
+    if (match && match[1]) {
+        // Extract video ID from the YouTube URL
+        var videoId = match[1];
+
+        // Construct multiple thumbnail URLs
+        var thumbnailUrls = [
+            `https://img.youtube.com/vi/${videoId}/default.jpg`,   // Default thumbnail
+            `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`, // Medium quality thumbnail
+            `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` // Maximum resolution thumbnail
+        ];
+
+        // Display thumbnails in the HTML page
+        var thumbnailsDiv = document.getElementById('thumbnails');
+        thumbnailsDiv.innerHTML = '';  // Clear previous thumbnails
+
+        thumbnailUrls.forEach(function (url) {
+            var img = document.createElement('img');
+            img.src = url;
+            img.style.margin = '10px';
+            img.style.width = '300px';  // Set a width for better display
+            thumbnailsDiv.appendChild(img);
+        });
+
+        // Show the download button after displaying thumbnails
+        document.getElementById('downloadButton').style.display = 'block';
+    } else {
+        alert("Please enter a valid YouTube video URL");
+    }
+}
+
+function downloadThumbnails() {
+    var imageUrl = document.getElementById('imageUrl').value;
+
+    // Check if the URL is a valid YouTube video URL
+    var youtubeRegex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    var match = imageUrl.match(youtubeRegex);
+
+    if (match && match[1]) {
+        // Extract video ID from the YouTube URL
+        var videoId = match[1];
+
+        // Construct multiple thumbnail URLs
+        var thumbnailUrls = [
+            `https://img.youtube.com/vi/${videoId}/default.jpg`,   // Default thumbnail
+            `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`, // Medium quality thumbnail
+            `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` // Maximum resolution thumbnail
+        ];
+
+        // Loop through the thumbnail URLs and download each one
+        thumbnailUrls.forEach(function (url, index) {
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = `thumbnail_${index + 1}.jpg`;  // Save with different names
+            link.click();
+        });
+    }
+}
+
+
+	</script>
+</body>
+</html>
